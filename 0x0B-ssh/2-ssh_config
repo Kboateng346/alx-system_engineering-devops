@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-Host 98.98.98.98
+Host 52.91.132.95
   IdentityFile ~/.ssh/school
   PreferredAuthentications publickey
   PasswordAuthentication no
