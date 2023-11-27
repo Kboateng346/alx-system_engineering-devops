@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+ssh-keygen -t rsa -b 4096 -C "vadmin@vw.com" -N "betty" -f "school"
