@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# setup NGINX
+
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.html
+cm="rewrite ^/redirect_me https://www.linkedin.com/in/aarononto/ permanent;"
+sed -i "66i $cm" /etc/nginx/sites-available/default
+echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+error_="\\error_page 404 /custom_404.html;\nlocation = /custom_404.html {\n\troot /var/www/html;\n\tinternal;\n}\n"
+sed -i "44i $error_" /etc/nginx/sites-available/default
+service nginx start

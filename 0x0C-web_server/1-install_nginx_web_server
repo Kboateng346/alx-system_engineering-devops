@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# configures a new Ubuntu machine with an nginx server
+
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+service nginx restart

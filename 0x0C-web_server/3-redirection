@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# /redirect_me, redirecting to another page.
+
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.html
+sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://www.linkedin.com/in/aarononto/ permanent;' /etc/nginx/sites-available/default
+service nginx start
