@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
-# This is a bash script that transfers a file from a client to a server using scp
+# Transfers a file from our client to a server
+#
+# variables
+path="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+filename=$(basename "$BASH_SOURCE")
+brown='\e[0;33m'
+reset='\033[0m'
+file="$1"
+ip="$2"
+user="$3"
+key="$4"
 
-if [ "$#" -lt 3 ]; then
-	echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
-elif [ "$#" -lt 4 ]; then
-	scp -o StrictHostKeyChecking=no "$1" "$3@$2":~/
+if [ $# -eq 4 ]; then
+	scp -i "$key" -o StrictHostKeyChecking=no "$path"/"$file" "$user"@"$ip":/home/"$user"/
 else
-	scp -i "$4" -o StrictHostKeyChecking=no "$1" "$3@$2":~/
+	echo -e "Usage: ${brown}$filename PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY${reset}"
 fi
