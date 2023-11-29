@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Fixes listening port of Ngnix server
+
+sudo sed -i "s/sites-enabled/sites-available/" /etc/nginx/nginx.conf
+sudo service nginx restart

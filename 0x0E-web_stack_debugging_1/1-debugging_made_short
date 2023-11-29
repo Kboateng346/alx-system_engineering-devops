@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Fixes Ngnix server
+sudo sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+sudo service nginx start
+sudo kill "$(pgrep nginx | head -1)"
