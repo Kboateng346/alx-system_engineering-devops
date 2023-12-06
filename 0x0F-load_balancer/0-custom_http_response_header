@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
-# Configure Nginx so that its HTTP response contains a custom header
-# HTTP response contains a custom header (on web-01 and web-02)
-var=$(hostname)
-new_string="error_page 404 \/custom_404.html;\n location \/redirect_me {\n return 301 \$scheme:\/\/www.google.com;"
-new_string2="server {\n\tadd_header X-Served-By $var;"
+# Confifiure a new unbuntu server
 
-apt-get update -y
-apt-get install nginx -y
-echo "Hello World!" > /usr/share/nginx/html/index.html
-mkdir -p /var/www/html
+apt-get -y update
+apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.html
+cm="rewrite ^/redirect_me https://www.linkedin.com/in/aarononto/ permanent;"
+sed -i "66i $cm" /etc/nginx/sites-available/default
 echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
-sudo sed -i -E "s/^[^#]+location \/ \{/$new_string/" /etc/nginx/sites-available/default
-sudo sed -i -E "s/^server \{/$new_string2/" /etc/nginx/sites-available/default
-sudo service nginx start
+error_="\\error_page 404 /custom_404.html;\nlocation = /custom_404.html {\n\troot /var/www/html;\n\tinternal;\n}\n"
+sed -i "44i $error_" /etc/nginx/sites-available/default
+header_string="http {\\n\\tadd_header X-Served-By \"$HOSTNAME\";"
+sudo sed -i "s/http {/$header_string/" /etc/nginx/nginx.conf
+service nginx start
