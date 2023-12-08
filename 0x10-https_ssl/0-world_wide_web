@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-#display subdomains information
+# Takes a subdomain and a domain and returns information about the subdomain
 
-dns_config () {
-    script=$(dig "$2"."$1" | awk '/ANSWER SECTION:/ {getline; print $1, $2, $NF}')
-    echo "The subdomain $2 is a $script record and points to $NF"
+print_info () {
+    dig "$1" | grep -A1 'ANSWER SECTION:' | sed -r "s/$1./$2/g" | awk -F" " ' NR==2 { print "The subdomain " $1 " is a " $4 " record and points to " $5 }'
 }
 
-if [ "$#" == 1 ]
+if [ "$#" -eq 2 ]
 then
-    dns_config "$1" "www"
-    dns_config "$1" "lb-01"
-    dns_config "$1" "web-01"
-    dns_config "$1" "web-02"
-elif [ "$#" == 2 ]
-then
-    dns_config "$1" "$2"
+    print_info "$2.$1" "$2"
+else
+    print_info "www.$1" "www"
+    print_info "lb-01.$1" "lb-01"
+    print_info "web-01.$1" "web-01"
+    print_info "web-02.$1" "web-02"
 fi
