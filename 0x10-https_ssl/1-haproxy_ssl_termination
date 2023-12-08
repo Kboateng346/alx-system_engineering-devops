@@ -32,18 +32,18 @@ errorfile 502 /etc/haproxy/errors/502.http
 errorfile 503 /etc/haproxy/errors/503.http
 errorfile 504 /etc/haproxy/errors/504.http
 
-frontend  ehoneah-frontend-http
+frontend  kboateng346-frontend-http
 bind *:80
 mode http
 http-request set-header X-Forwarded-Proto http
-default_backend ehoneah-backend
+default_backend kboateng346-backend
 
-frontend ehoneah-frontend-https
+frontend kboateng346-frontend-https
 bind *:443 ssl crt /etc/haproxy/certs/www.ehoneah.tech.pem
 http-request set-header X-Forwarded-Proto https
-default_backend ehoneah-backend
+default_backend kboateng346-backend
 
-backend ehoneah-backend
+backend kboateng346-backend
 balance roundrobin
-server 63210-web-01 18.234.107.129:80 check
-server 63210-web-02 18.234.107.129:80 check
+server 63210-web-01 52.91.132.95:80 check
+server 63210-web-02 100.25.103.98:80 check
