@@ -1,90 +1,14 @@
 #!/usr/bin/env bash
-# duplicate web-01 to web-02
-# these scripts are an upgrade from the web-server scripts...
+# Confifiure a new unbuntu server
 
-# uncomment to see the script run in action
-#set -x
-
-# colors
-blue='\e[1;34m'
-brown='\e[0;33m'
-green='\e[1;32m'
-reset='\033[0m'
-
-echo -e "${blue}Updating and doing some minor checks...${reset}\n"
-
-function install() {
-	command -v "$1" &> /dev/null
-
-	#shellcheck disable=SC2181
-	if [ $? -ne 0 ]; then
-		echo -e "	Installing: ${brown}$1${reset}\n"
-		sudo apt-get update -y -qq && \
-			sudo apt-get install -y "$1" -qq
-		echo -e "\n"
-	else
-		echo -e "	${green}${1} is already installed.${reset}\n"
-	fi
-}
-
-install nginx #install nginx
-
-echo -e "\n${blue}Setting up some minor stuff.${reset}\n"
-
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
-
-# Give the user ownership to website files for easy editing
-if [ -d "/var/www" ]; then
-	sudo chown -R "$USER":"$USER" /var/www
-	sudo chmod -R 755 /var/www
-else
-	sudo mkdir -p /var/www
-	sudo chown -R "$USER":"$USER" /var/www
-	sudo chmod -R 755 /var/www
-fi
-
-# create directories if not present
-for dir in /var/www/{html,error}; do
-	if ! [ -d "$dir" ]; then
-		mkdir -p "$dir"
-	fi
-done
-
-# creating new index
+apt-get -y update
+apt-get -y install nginx
 echo "Hello World!" > /var/www/html/index.html
-
-# create new error page
-echo "Ceci n'est pas une page" > /var/www/html/error_404.html
-
-# backup default server config file
-sudo cp /etc/nginx/sites-enabled/default nginx-sites-enabled_default.backup
-
-server_config=\
-"server {
-		listen 80 default_server;
-		listen [::]:80 default_server;
-		root /var/www/html;
-		index index.html index.htm index.nginx-debian.html
-		server_name_;
-		add_header X-Served-By \$hostname;
-		location / {
-			try_files \$uri \$uri/ =404;
-		}
-		if (\$request_filename ~ redirect_me){
-			rewrite ^ https://th3-gr00t.tk/ permanent;
-		}
-		error_page 404 /error_404.html;
-		location = /error_404.html {
-			internal;
-		}
-}"
-
-#shellcheck disable=SC2154
-echo "$server_config" | sudo dd status=none of=/etc/nginx/sites-enabled/default
-
-if [ "$(pgrep -c nginx)" -le 0 ]; then
-	sudo service nginx start
-else
-	sudo service nginx restart
-fi
+cm="rewrite ^/redirect_me https://www.linkedin.com/in/aarononto/ permanent;"
+sed -i "66i $cm" /etc/nginx/sites-available/default
+echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+error_="\\error_page 404 /custom_404.html;\nlocation = /custom_404.html {\n\troot /var/www/html;\n\tinternal;\n}\n"
+sed -i "44i $error_" /etc/nginx/sites-available/default
+header_string="http {\\n\\tadd_header X-Served-By \"$HOSTNAME\";"
+sudo sed -i "s/http {/$header_string/" /etc/nginx/nginx.conf
+service nginx start
