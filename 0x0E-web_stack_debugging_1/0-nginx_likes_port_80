@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# Fixes listening port of Ngnix server
-
-sudo sed -i "s/sites-enabled/sites-available/" /etc/nginx/nginx.conf
-sudo service nginx restart
+# commands to debug the container
+st="\tlisten 8080 default_server\;"
+newst="\tlisten 80 default_server\;"
+st2="\tlisten \[::\]:8080 default_server"
+newst2="\tlisten \[::\]:80 default_server"
+sudo sed -i "0,/$st/{s/$st/$newst/}" /etc/nginx/sites-enabled/default
+sudo sed -i "0,/$st2/{s/$st2/$newst2/}" /etc/nginx/sites-enabled/default
+sudo service nginx start
