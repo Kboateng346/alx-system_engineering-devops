@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# runs the whoami command under the user passed as an argument
+if [ $# -eq 1 ]
+then
+sudo -H -u "$1" bash -c 'whoami'
+fi
