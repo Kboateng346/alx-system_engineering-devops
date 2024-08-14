@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-
 """Module to query the number of subscribers for a given Reddit subreddit."""
-
 import requests
 
 
