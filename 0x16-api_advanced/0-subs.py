@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-"""Function to query the number of subscribers on a given Reddit subreddit."""
+"""Module to query the number of subscribers for a given Reddit subreddit."""
 
 import requests
 
@@ -24,4 +24,6 @@ def number_of_subscribers(subreddit):
         return 0
     
     data = response.json().get("data")
-    return data.get("subscribers")
+    if data:
+        return data.get("subscribers", 0)
+    return 0
